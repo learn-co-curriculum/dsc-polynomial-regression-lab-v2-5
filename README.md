@@ -13,10 +13,7 @@ You will be able to:
 
 ## Create the best plot using polynomials!
 
-Below, we created a plot with a clearly non-linear shape.
-
-- plot a polynomial function using `PolynomialFeatures` for polynomials up until the second, third and fourth degree.
-- print out the $R^2$ value for each of the three results. Draw conclusions with respect to which degree is best.
+Here is a plot with a clearly non-linear shape. Begin to think about what degree polynomial you believe will fit it best.
 
 
 ```python
@@ -41,6 +38,10 @@ plt.show();
 
 ![png](index_files/index_7_0.png)
 
+
+Now it's time to determine the optimal degree of polynomial features for a model that is fit to this data
+* Plot a polynomial function using PolynomialFeatures for polynomials up until the second, third and fourth degree. Make sure to label each degree polynomial in your plot.
+* Print out the $R^2$ value for each of the three results. Draw conclusions with respect to which degree is best.
 
 ## Solution
 
@@ -85,15 +86,17 @@ for index, degree in enumerate([2,3,4]):
 
 plt.legend(loc='lower left')
 plt.show();
+
+# The third degree polynomial performed the best
 ```
 
-    degree 2 0.013285175914231284
-    degree 3 0.9126341307899343
-    degree 4 0.8609275710964498
+    degree 2 0.008246521737270918
+    degree 3 0.8158919334827324
+    degree 4 0.8982073447866386
 
 
 
-![png](index_files/index_9_1.png)
+![png](index_files/index_10_1.png)
 
 
 ## Summary

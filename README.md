@@ -39,9 +39,9 @@ plt.show();
 ![png](index_files/index_7_0.png)
 
 
-Now it's time to determine the optimal degree of polynomial features for a model that is fit to this data
-* Plot a polynomial function using PolynomialFeatures for polynomials up until the second, third and fourth degree. Make sure to label each degree polynomial in your plot.
-* Print out the $R^2$ value for each of the three results. Draw conclusions with respect to which degree is best.
+Now it's time to determine the optimal degree of polynomial features for a model that is fit to this data     
+- Plot a polynomial function using `PolynomialFeatures` for polynomials up until the second, third and fourth degree. Make sure to label each degree polynomial in your plot.   
+- Print out the $R^2$ value for each of the three results. Draw conclusions with respect to which degree is best.
 
 ## Solution
 

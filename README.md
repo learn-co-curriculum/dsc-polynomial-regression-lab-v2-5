@@ -39,6 +39,31 @@ plt.show();
 ![png](index_files/index_7_0.png)
 
 
+
+```python
+# __SOLUTION__ 
+import numpy as np
+import matplotlib.pyplot as plt
+% matplotlib inline
+
+def pol(x):
+    return x * np.cos(x)
+
+x = np.linspace(0, 12, 100)
+rng = np.random.RandomState(1234)
+rng.shuffle(x)
+x = np.sort(x[:25])
+y = pol(x) + np.random.randn(25)*2
+
+plt.scatter(x, y, color='green', s=50, marker='.')
+
+plt.show();
+```
+
+
+![png](index_files/index_8_0.png)
+
+
 Now it's time to determine the optimal degree of polynomial features for a model that is fit to this data     
 - Plot a polynomial function using `PolynomialFeatures` for polynomials up until the second, third and fourth degree. Make sure to label each degree polynomial in your plot.   
 - Print out the $R^2$ value for each of the three results. Draw conclusions with respect to which degree is best.
@@ -49,6 +74,61 @@ Now it's time to determine the optimal degree of polynomial features for a model
 ```python
 ## your code here
 ```
+
+
+```python
+# __SOLUTION__ 
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+% matplotlib inline
+
+def pol(x):
+    return x * np.cos(x)
+
+x = np.linspace(0, 12, 100)
+rng = np.random.RandomState(1234)
+rng.shuffle(x)
+x = np.sort(x[:25])
+y = pol(x) + np.random.randn(25)*2
+
+x_plot = np.linspace(0, 12, 100)
+
+# reshape the arrays
+X = x[:, np.newaxis]
+X_plot = x_plot[:, np.newaxis]
+
+colors = ['yellow', 'lightgreen', 'blue']
+plt.figure(figsize=(10,6))
+plt.scatter(x, y, color='green', s=50, marker='.', label="plot points")
+
+for index, degree in enumerate([2,3,4]):
+    poly = PolynomialFeatures(degree)
+    X = poly.fit_transform(X)
+    X_plot = poly.fit_transform(X_plot)
+    reg_poly = LinearRegression().fit(X, y)
+    y_plot = reg_poly.predict(X_plot)
+    plt.plot(x_plot, y_plot, color=colors[index], linewidth = 2 ,
+             label="degree %d" % degree)
+    print("degree %d" % degree, r2_score(y, reg_poly.predict(X)))
+
+plt.legend(loc='lower left')
+plt.show();
+
+# The third degree polynomial performed the best
+```
+
+    degree 2 0.008246521737270918
+    degree 3 0.8158919334827324
+    degree 4 0.8982073447866386
+
+
+
+![png](index_files/index_12_1.png)
+
 
 ## Summary
 

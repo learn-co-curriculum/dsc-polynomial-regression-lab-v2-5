@@ -44,7 +44,7 @@ plt.show();
 # __SOLUTION__ 
 import numpy as np
 import matplotlib.pyplot as plt
-% matplotlib inline
+%matplotlib inline
 
 def pol(x):
     return x * np.cos(x)

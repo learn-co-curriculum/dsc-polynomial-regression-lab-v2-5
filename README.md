@@ -53,8 +53,6 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 
-% matplotlib inline
-
 def pol(x):
     return x * np.cos(x)
 
@@ -90,9 +88,9 @@ plt.show();
 # The third degree polynomial performed the best
 ```
 
-    degree 2 0.008246521737270918
-    degree 3 0.8158919334827324
-    degree 4 0.8982073447866386
+    degree 2 0.1396174964750283
+    degree 3 0.8844297809889984
+    degree 4 0.8270462664149597
 
 
 

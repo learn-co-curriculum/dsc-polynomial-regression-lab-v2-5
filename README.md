@@ -19,7 +19,7 @@ Here is a plot with a clearly non-linear shape. Begin to think about what degree
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-% matplotlib inline
+%matplotlib inline
 
 def pol(x):
     return x * np.cos(x)

@@ -1,4 +1,3 @@
-
 # Polynomial Regression - Lab
 
 ## Introduction
@@ -9,21 +8,22 @@ In this lab, you'll practice your knowledge on adding polynomial terms to your r
 
 You will be able to:
 
-- Use sklearn's built in capabilities to create polynomial features 
+* Determine if polynomial regression would be useful for a specific model or set of data
+* Create polynomial terms out of independent variables in linear regression
 
 ## Dataset
 
-Here is the dataset you will be working with in this lab: 
+For this lab you'll be using some generated data:
 
 
 ```python
+# Run this cell without changes
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 %matplotlib inline
 
 df = pd.read_csv('sample_data.csv')
-
 df.head()
 ```
 
@@ -96,156 +96,335 @@ df.head()
 
 
 
-Run the following line of code. You will notice that the data is clearly of non-linear shape. Begin to think about what degree polynomial you believe will fit it best.
+Let's check out a scatter plot of `x` vs. `y`: 
 
 
 ```python
-plt.scatter(df['x'], df['y'], color='green', s=50, marker='.');
+# Run this cell without changes
+df.plot.scatter(x="x", y="y");
 ```
 
 
 ```python
-# __SOLUTION__ 
-plt.scatter(df['x'], df['y'], color='green', s=50, marker='.');
+# __SOLUTION__
+df.plot.scatter(x="x", y="y");
 ```
 
 
+    
 ![png](index_files/index_11_0.png)
+    
 
 
-## Train-test split
+You will notice that the data is clearly of non-linear shape. Begin to think about what degree polynomial you believe will fit it best.
 
-The next step is to split the data into training and test sets. Set the `random_state` to 42 and assign 75% of the data in the training set. 
+You will fit several different models with different polynomial degrees, then plot them in the same plot at the end.
 
 
 ```python
-# Split data into 75-25 train-test split 
-from sklearn.model_selection import train_test_split
-y = df['y']
-X = df.drop(columns='y', axis=1)
-X_train, X_test, y_train, y_test = None
+# Your code here - import StatsModels and separate the data into X and y
+
 ```
 
 
 ```python
-# __SOLUTION__ 
-# Split data into 75-25 train-test split 
-from sklearn.model_selection import train_test_split
-y = df['y']
-X = df.drop(columns='y', axis=1)
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42, train_size=0.75)
+# __SOLUTION__
+import statsmodels.api as sm
+
+X = df[["x"]]
+y = df["y"]
 ```
 
-## Build polynomial models
+## Build and Evaluate a Quadratic Model
 
-Now it's time to determine the optimal degree of polynomial features for a model that is fit to this data. For each of second, third and fourth degrees: 
-
-- Instantiate `PolynomialFeatures()` with the number of degrees 
-- Fit and transform the `X_train` features 
-- Instantiate and fit a linear regression model on the training data 
-- Transform the test data into polynomial features 
-- Use the model you built above to make predictions using the transformed test data 
-- Evaluate model performance on the test data using `r2_score()` 
-- In order to plot how well the model performs on the full dataset, transform `X` using `poly` 
-- Use the same model (`reg_poly`) to make predictions using `X_poly` 
-
+This model should include a constant, `x`, and `x` squared. You can use `pandas` or `PolynomialFeatures` to create the squared term.
 
 
 ```python
-# Import relevant modules and functions
+# Your code here - prepare quadratic data and fit a model
+
+```
+
+
+```python
+# __SOLUTION__
 from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score
 
-colors = ['yellow', 'lightgreen', 'blue']
-plt.figure(figsize=(10, 6))
-plt.scatter(df['x'], df['y'], color='green', s=50, marker='.', label='plot points')
+poly_2 = PolynomialFeatures(degree=2)
 
-# We'll fit 3 different polynomial regression models from degree 2 to degree 4
-for index, degree in enumerate([2, 3, 4]):
-    
-    # Instantiate PolynomialFeatures
-    poly = None
-    
-    # Fit and transform X_train
-    X_poly_train = None
-    
-    # Instantiate and fit a linear regression model to the polynomial transformed train features
-    reg_poly = None
-    
-    # Transform the test data into polynomial features
-    X_poly_test = None
-    
-    # Get predicted values for transformed polynomial test data  
-    y_pred = None
-    
-    # Evaluate model performance on test data
-    print("degree %d" % degree, r2_score(y_test, y_pred))
-    
-    # Transform the full data
-    X_poly = None
-    
-    # Now, we want to see what the model predicts for the entire data 
-    y_poly = None
-    
-    # Create plot of predicted values
-    plt.plot(X, y_poly, color = colors[index], linewidth=2, label='degree %d' % degree)
-    plt.legend(loc='lower left')
+x_2 = pd.DataFrame(poly_2.fit_transform(X), columns=poly_2.get_feature_names(["x"]))
+squared_results = sm.OLS(y, x_2).fit()
 ```
 
 
 ```python
-# __SOLUTION__ 
-# Import relevant modules and functions
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score
+# Your code here - evaluate (adjusted) R-Squared and coefficient p-values
 
-colors = ['yellow', 'lightgreen', 'blue']
-plt.figure(figsize=(10, 6))
-plt.scatter(df['x'], df['y'], color='green', s=50, marker='.', label='plot points')
-
-# We'll fit 3 different polynomial regression models from degree 2 to degree 4
-for index, degree in enumerate([2, 3, 4]):
-    
-    # Instantiate PolynomialFeatures
-    poly = PolynomialFeatures(degree)
-    
-    # Fit and transform X_train
-    X_poly_train = poly.fit_transform(X_train)
-    
-    # Instantiate and fit a linear regression model to the polynomial transformed train features
-    reg_poly = LinearRegression().fit(X_poly_train, y_train)
-    
-    # Transform the test data into polynomial features
-    X_poly_test = poly.transform(X_test)
-    
-    # Get predicted values for transformed polynomial test data  
-    y_pred = reg_poly.predict(X_poly_test)
-    
-    # Evaluate model performance on test data
-    print("degree %d" % degree, r2_score(y_test, y_pred))
-    
-    # Transform the full data
-    X_poly = poly.transform(X)
-    
-    # Now, we want to see what the model predicts for the entire data  
-    y_poly = reg_poly.predict(X_poly)
-    
-    # Create plot of predicted values
-    plt.plot(X, y_poly, color = colors[index], linewidth=2, label='degree %d' % degree)
-    plt.legend(loc='lower left')
 ```
 
-    degree 2 -0.14450360246115035
-    degree 3 0.01931659855732648
-    degree 4 0.5138362771625329
+
+```python
+# __SOLUTION__
+print(f"""
+R-Squared Values
+Quadratic Regression: {squared_results.rsquared_adj}
+""")
+```
+
+    
+    R-Squared Values
+    Quadratic Regression: -0.015664188856822303
+    
 
 
 
-![png](index_files/index_18_1.png)
+```python
+# __SOLUTION__
+squared_results.pvalues
+```
 
+
+
+
+    1      0.938055
+    x      0.893974
+    x^2    0.967420
+    dtype: float64
+
+
+
+
+```python
+# Your written answer here - summarize findings
+
+```
+
+<details>
+    <summary style="cursor: pointer"><b>Answer (click to reveal)</b></summary>
+    
+This is not a good model. Because we have multiple terms and are explaining so little of the variance in `y`, we actually have a negative adjusted R-Squared.
+
+None of the coefficients are statistically significant at an alpha of 0.05
+    
+</details>
+
+## Build and Evaluate a 4th Degree Polynomial Model
+
+In other words, the model should include $x^0$ (intercept), $x^1$, $x^2$, $x^3$, and $x^4$ terms.
+
+At this point we recommend importing and using `PolynomialFeatures` if you haven't already!
+
+
+```python
+# Your code here - prepare 4th degree polynomial data and fit a model
+
+```
+
+
+```python
+# __SOLUTION__
+poly_4 = PolynomialFeatures(degree=4)
+
+x_4 = pd.DataFrame(poly_4.fit_transform(X), columns=poly_4.get_feature_names(["x"]))
+poly_4_results = sm.OLS(y, x_4).fit()
+```
+
+
+```python
+# Your code here - evaluate (adjusted) R-Squared and coefficient p-values
+
+```
+
+
+```python
+# __SOLUTION__
+print(f"""
+R-Squared Values
+Quadratic Regression:             {squared_results.rsquared_adj}
+4th Degree Polynomial Regression: {poly_4_results.rsquared_adj}
+""")
+```
+
+    
+    R-Squared Values
+    Quadratic Regression:             -0.015664188856822303
+    4th Degree Polynomial Regression: 0.5667967820112239
+    
+
+
+
+```python
+# __SOLUTION__
+poly_4_results.pvalues
+```
+
+
+
+
+    1      1.995047e-04
+    x      1.738988e-10
+    x^2    3.340296e-14
+    x^3    1.715785e-16
+    x^4    7.408453e-18
+    dtype: float64
+
+
+
+
+```python
+# Your written answer here - summarize findings
+
+```
+
+<details>
+    <summary style="cursor: pointer"><b>Answer (click to reveal)</b></summary>
+    
+This is much better. We are explaining 57-58% of the variance in the target and all of our coefficients are statistically significant at an alpha of 0.05.
+    
+</details>
+
+## Build and Evaluate an 8th Degree Polynomial Model
+
+This model should include $x^0$ through $x^8$.
+
+
+```python
+# Your code here - prepare 8th degree polynomial data and fit a model
+
+```
+
+
+```python
+# __SOLUTION__
+poly_8 = PolynomialFeatures(degree=8)
+
+x_8 = pd.DataFrame(poly_8.fit_transform(X), columns=poly_8.get_feature_names(["x"]))
+poly_8_results = sm.OLS(y, x_8).fit()
+```
+
+
+```python
+# Your code here - evaluate (adjusted) R-Squared and coefficient p-values
+
+```
+
+
+```python
+# __SOLUTION__
+print(f"""
+R-Squared Values
+Quadratic Regression:             {squared_results.rsquared_adj}
+4th Degree Polynomial Regression: {poly_4_results.rsquared_adj}
+8th Degree Polynomial Regression: {poly_8_results.rsquared_adj}
+""")
+```
+
+    
+    R-Squared Values
+    Quadratic Regression:             -0.015664188856822303
+    4th Degree Polynomial Regression: 0.5667967820112239
+    8th Degree Polynomial Regression: 0.8188676291759689
+    
+
+
+
+```python
+# __SOLUTION__
+poly_8_results.pvalues
+```
+
+
+
+
+    1      0.683776
+    x      0.618134
+    x^2    0.371163
+    x^3    0.199162
+    x^4    0.144776
+    x^5    0.157523
+    x^6    0.225536
+    x^7    0.357352
+    x^8    0.554141
+    dtype: float64
+
+
+
+
+```python
+# Your written answer here - summarize findings
+
+```
+
+<details>
+    <summary style="cursor: pointer"><b>Answer (click to reveal)</b></summary>
+    
+Our R-Squared is higher, but none of the coefficients are statistically significant at an alpha of 0.05 any more. If what we care about is an inferential understanding of the data, this is too high a degree of the polynomial.
+    
+</details>
+
+## Plot All Models
+
+Build a single plot that shows the raw data as a scatter plot, as well as all of the models you have developed as line graphs. Make sure that everything is labeled so you can tell the different models apart!
+
+
+```python
+# Your code here
+
+```
+
+
+```python
+# __SOLUTION__
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+models = [squared_results, poly_4_results, poly_8_results]
+data = [x_2, x_4, x_8]
+colors = ['yellow', 'lightgreen', 'cyan']
+
+ax.scatter(X, y, label="data points", color="black")
+for i, model in enumerate(models):
+    ax.plot(
+        X, # plot same x values for every model
+        model.predict(data[i]), # generate predictions using relevant preprocessed data
+        label=f"polynomial degree {(i + 1)*2}", # degree happens to be 2 times (i + 1)
+        color=colors[i], # select color from list declared earlier
+        linewidth=5,
+        alpha=0.7
+    )
+    
+ax.legend();
+```
+
+
+    
+![png](index_files/index_41_0.png)
+    
+
+
+### Interpret Findings
+
+Based on the metrics as well as the graphs, which model do you think is the best? Why?
+
+
+```python
+# Your written answer here
+
+```
+
+<details>
+    <summary style="cursor: pointer"><b>Answer (click to reveal)</b></summary>
+    
+The quadratic model (polynomial degree 2) is definitely not the best based on all of the evidence we have. It has the worst R-Squared, the coefficient p-values are not significant, and you can see from the graph that there is a lot of variance in the data that it is not picking up on.
+
+Our visual inspection aligns with the worse R-Squared for the 4th degree polynomial compared to the 8th degree polynomial. The 4th degree polynomial is flatter and doesn't seem to capture the extremes of the data as well.
+    
+However if we wanted to interpret the coefficients, then only the 4th degree polynomial has statistically significant results. The interpretation would be challenging because of the number of terms, but we could apply some calculus techniques to describe inflection points.
+
+Overall it appears that this dataset is not particularly well suited to an inferential linear regression approach, even with polynomial transformations. So the "best" model could be either the 4th or 8th degree polynomial depending on which aspect of the model is more important to you, but either way it will be challenging to translate it into insights for stakeholders.
+    
+</details>
 
 ## Summary
 
-Great job! You now know how to include polynomials in your linear models. 
+Great job! You now know how to include polynomials in your linear models as well as the limitations of applying polynomial regression. 

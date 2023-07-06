@@ -118,7 +118,7 @@ from sklearn.preprocessing import PolynomialFeatures
 
 poly_2 = PolynomialFeatures(degree=2)
 
-x_2 = pd.DataFrame(poly_2.fit_transform(X), columns=poly_2.get_feature_names(["x"]))
+x_2 = pd.DataFrame(poly_2.fit_transform(X), columns=poly_2.get_feature_names_out(["x"]))
 squared_results = sm.OLS(y, x_2).fit()
 ```
 
@@ -170,7 +170,7 @@ At this point we recommend importing and using `PolynomialFeatures` if you haven
 ```python
 poly_4 = PolynomialFeatures(degree=4)
 
-x_4 = pd.DataFrame(poly_4.fit_transform(X), columns=poly_4.get_feature_names(["x"]))
+x_4 = pd.DataFrame(poly_4.fit_transform(X), columns=poly_4.get_feature_names_out(["x"]))
 poly_4_results = sm.OLS(y, x_4).fit()
 ```
 
@@ -222,7 +222,7 @@ This model should include $x^0$ through $x^8$.
 ```python
 poly_8 = PolynomialFeatures(degree=8)
 
-x_8 = pd.DataFrame(poly_8.fit_transform(X), columns=poly_8.get_feature_names(["x"]))
+x_8 = pd.DataFrame(poly_8.fit_transform(X), columns=poly_8.get_feature_names_out(["x"]))
 poly_8_results = sm.OLS(y, x_8).fit()
 ```
 
